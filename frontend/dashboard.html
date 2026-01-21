@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="flex items-center justify-center h-screen bg-gray-100">
+
+  <div class="bg-white p-6 rounded shadow w-80 text-center">
+    <h2 class="text-xl font-bold mb-3">Dashboard</h2>
+    <p id="welcome" class="mb-4"></p>
+
+    <button onclick="logout()" class="bg-red-600 text-white px-4 py-2 rounded" >  Logout</button>
+  </div>
+
+  <script>
+    async function loadDashboard() {
+      try {
+        const res = await fetch("http://localhost:5000/auth/dashboard", {
+          credentials: "include" // 🔥 REQUIRED
+        });
+
+        if (!res.ok) {
+          window.location.href = "login.html";
+          return;
+        }
+
+        const data = await res.json();
+        document.getElementById("welcome").innerText =
+          "Hello " + data.name;
+
+      } catch (err) {
+        window.location.href = "login.html";
+      }
+    }
+
+    async function logout() {
+      await fetch("http://localhost:5000/auth/logout", {
+        method: "POST",
+        credentials: "include"
+      });
+
+      window.location.href = "login.html";
+    }
+
+    // 🚀 auto-load dashboard
+    loadDashboard();
+  </script>
+
+</body>
+</html>

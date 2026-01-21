@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Email Verification</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="flex items-center justify-center h-screen bg-gray-100">
+
+  <div class="bg-white p-6 rounded shadow text-center">
+    <h2 class="text-xl font-bold mb-2">Email Verification</h2>
+    <p id="msg">Verifying...</p>
+  </div>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const token = params.get("token");
+
+fetch(`http://localhost:5000/auth/verify?token=${token}`)
+  .then(res => res.text())
+  .then(data => {
+    document.getElementById("msg").textContent = data;
+  })
+  .catch(() => {
+    document.getElementById("msg").textContent = "Verification failed";
+  });
+</script>
+
+</body>
+</html>
