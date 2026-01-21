@@ -23,3 +23,5 @@ build/
 
 # Redis dump
 dump.rdb
+
+readme.md
