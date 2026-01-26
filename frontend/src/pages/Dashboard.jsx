@@ -8,9 +8,12 @@ export default function Dashboard() {
   useEffect(() => {
     const loadDashboard = async () => {
       try {
-        const res = await fetch("http://localhost:5000/auth/dashboard", {
-          credentials: "include",
-        });
+        const res = await fetch(
+          "https://secure-email-auth-backend.onrender.com/auth/dashboard",
+          {
+            credentials: "include",
+          }
+        );
 
         if (!res.ok) {
           navigate("/");
@@ -28,10 +31,13 @@ export default function Dashboard() {
   }, [navigate]);
 
   const logout = async () => {
-    await fetch("http://localhost:5000/auth/logout", {
-      method: "POST",
-      credentials: "include",
-    });
+    await fetch(
+      "https://secure-email-auth-backend.onrender.com/auth/logout",
+      {
+        method: "POST",
+        credentials: "include",
+      }
+    );
     navigate("/");
   };
 

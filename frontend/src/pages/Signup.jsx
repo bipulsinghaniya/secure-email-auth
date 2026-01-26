@@ -8,11 +8,14 @@ export default function Signup() {
 
   const signup = async () => {
     try {
-      const res = await fetch("http://localhost:5000/auth/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password }),
-      });
+      const res = await fetch(
+        "https://secure-email-auth-backend.onrender.com/auth/signup",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, email, password }),
+        }
+      );
 
       const data = await res.json();
       setMsg(data.message);

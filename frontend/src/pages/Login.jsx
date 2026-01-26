@@ -9,12 +9,15 @@ export default function Login() {
 
   const login = async () => {
     try {
-      const res = await fetch("http://localhost:5000/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include", // 🔥 important
-        body: JSON.stringify({ email, password }),
-      });
+      const res = await fetch(
+        "https://secure-email-auth-backend.onrender.com/auth/login",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ email, password }),
+        }
+      );
 
       const text = await res.text();
 

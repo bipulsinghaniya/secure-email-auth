@@ -8,7 +8,9 @@ export default function VerifyEmail() {
   useEffect(() => {
     const token = params.get("token");
 
-    fetch(`http://localhost:5000/auth/verify?token=${token}`)
+    fetch(
+      `https://secure-email-auth-backend.onrender.com/auth/verify?token=${token}`
+    )
       .then((res) => res.text())
       .then((data) => setMsg(data))
       .catch(() => setMsg("Verification failed"));
