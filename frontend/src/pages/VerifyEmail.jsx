@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { API_BASE } from "../config";
 
 export default function VerifyEmail() {
   const [msg, setMsg] = useState("Verifying...");
@@ -8,11 +9,9 @@ export default function VerifyEmail() {
   useEffect(() => {
     const token = params.get("token");
 
-    fetch(
-      `https://secure-email-auth-backend.onrender.com/auth/verify?token=${token}`
-    )
+    fetch(`${API_BASE}/auth/verify?token=${token}`)
       .then((res) => res.text())
-      .then((data) => setMsg(data))
+      .then(setMsg)
       .catch(() => setMsg("Verification failed"));
   }, [params]);
 

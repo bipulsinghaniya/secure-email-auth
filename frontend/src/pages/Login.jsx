@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { API_BASE } from "../config";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -9,26 +10,19 @@ export default function Login() {
 
   const login = async () => {
     try {
-      const res = await fetch(
-        "https://secure-email-auth-backend.onrender.com/auth/login",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify({ email, password }),
-        }
-      );
+      const res = await fetch(`${API_BASE}/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ email, password }),
+      });
 
       const text = await res.text();
-
-      if (!res.ok) {
-        setMsg(text);
-        return;
-      }
+      if (!res.ok) return setMsg(text);
 
       navigate("/dashboard");
     } catch {
-      setMsg("Server error");
+      setMsg("Login failed");
     }
   };
 
@@ -38,9 +32,8 @@ export default function Login() {
         <h2 className="text-xl font-bold text-center mb-4">Login</h2>
 
         <input
-          type="email"
           placeholder="Email"
-          className="w-full mb-3 p-2 border rounded"
+          className="w-full p-2 border mb-2"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
@@ -48,19 +41,19 @@ export default function Login() {
         <input
           type="password"
           placeholder="Password"
-          className="w-full mb-3 p-2 border rounded"
+          className="w-full p-2 border mb-3"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
 
         <button
           onClick={login}
-          className="w-full bg-green-600 text-white py-2 rounded"
+          className="bg-green-600 text-white w-full py-2 rounded"
         >
           Login
         </button>
 
-        {msg && <p className="text-red-500 text-sm text-center mt-3">{msg}</p>}
+        {msg && <p className="text-red-500 mt-2">{msg}</p>}
       </div>
     </div>
   );

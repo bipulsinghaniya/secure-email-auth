@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { API_BASE } from "../config";
 
 export default function Signup() {
   const [name, setName] = useState("");
@@ -8,17 +9,14 @@ export default function Signup() {
 
   const signup = async () => {
     try {
-      const res = await fetch(
-        "https://secure-email-auth-backend.onrender.com/auth/signup",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name, email, password }),
-        }
-      );
+      const res = await fetch(`${API_BASE}/auth/signup`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password }),
+      });
 
-      const data = await res.json();
-      setMsg(data.message);
+      const text = await res.text();
+      setMsg(text);
     } catch {
       setMsg("Signup failed");
     }
@@ -30,17 +28,15 @@ export default function Signup() {
         <h2 className="text-xl font-bold text-center mb-4">Signup</h2>
 
         <input
-          type="text"
           placeholder="Name"
-          className="w-full p-2 border mb-2 rounded"
+          className="w-full p-2 border mb-2"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
 
         <input
-          type="email"
           placeholder="Email"
-          className="w-full p-2 border mb-2 rounded"
+          className="w-full p-2 border mb-2"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
@@ -48,7 +44,7 @@ export default function Signup() {
         <input
           type="password"
           placeholder="Password"
-          className="w-full p-2 border mb-3 rounded"
+          className="w-full p-2 border mb-3"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
