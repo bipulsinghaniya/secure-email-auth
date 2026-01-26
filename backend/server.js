@@ -25,10 +25,14 @@ app.use(cookieParser());
 
 app.use(
   cors({
-    origin: true,
+    origin: [
+      "http://localhost:5173",
+      "https://secure-email-auth-frontend.onrender.com"
+    ],
     credentials: true
   })
 );
+
 
 
 app.use("/auth", authRoutes);
