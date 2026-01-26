@@ -103,11 +103,13 @@ const sendEmail = require("../utils/sendEmail");
 /* =========================
    SIGNUP
 ========================= */
+/* =========================
+   SIGNUP
+========================= */
 exports.signup = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
-    // check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser)
       return res.status(400).send("User already exists");
@@ -123,15 +125,15 @@ exports.signup = async (req, res) => {
 
     const verifyToken = crypto.randomBytes(32).toString("hex");
 
-    // store verification token in redis (10 minutes)
+    // store token in redis for 10 minutes
     await redisClient.set(
       `verify:${verifyToken}`,
       user._id.toString(),
       { EX: 600 }
     );
 
-    // const link = `http://localhost:5500/frontend/verify.html?token=${verifyToken}`;
-    const link = `http://localhost:5500/frontend/verify.html?token=${verifyToken}`;
+    // ✅ REACT VERIFY LINK
+    const link = `http://localhost:5173/verify?token=${verifyToken}`;
 
     await sendEmail(email, link);
 
@@ -188,13 +190,13 @@ exports.login = async (req, res) => {
       { expiresIn: "1h" }
     );
 
-    // set cookie correctly
+    // ✅ PRODUCTION COOKIE (RENDER)
     res.cookie("token", token, {
       httpOnly: true,
-      sameSite: "lax",
-      secure: false,      // true in production (HTTPS)
+      secure: true,
+      sameSite: "none",
       maxAge: 3600000,
-      path: "/"           // 🔥 VERY IMPORTANT
+      path: "/"
     });
 
     res.json({ message: "Login successful" });
@@ -202,6 +204,7 @@ exports.login = async (req, res) => {
     res.status(500).send("Login failed");
   }
 };
+
 
 /* =========================
    DASHBOARD
