@@ -6,9 +6,14 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [msg, setMsg] = useState("");
+  const [isError, setIsError] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const login = async () => {
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setMsg("");
     try {
       const res = await fetch(`${API_BASE}/auth/login`, {
         method: "POST",
@@ -16,44 +21,64 @@ export default function Login() {
         credentials: "include",
         body: JSON.stringify({ email, password }),
       });
-
-      const text = await res.text();
-      if (!res.ok) return setMsg(text);
-
-      navigate("/dashboard");
+      const data = await res.json();
+      if (res.ok) {
+        setIsError(false);
+        setMsg("Success! Redirecting...");
+        setTimeout(() => navigate("/dashboard"), 500);
+      } else {
+        setIsError(true);
+        setMsg(data.message);
+      }
     } catch {
-      setMsg("Login failed");
+      setIsError(true);
+      setMsg("Login failed. Check your connection.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gray-100">
-      <div className="bg-white p-6 rounded shadow w-80">
-        <h2 className="text-xl font-bold text-center mb-4">Login</h2>
+    <div className="page-container">
+      <div className="glass-card">
+        <h2 className="title">Welcome Back</h2>
 
-        <input
-          placeholder="Email"
-          className="w-full p-2 border mb-2"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+        <form onSubmit={handleLogin}>
+          <div className="input-group">
+            <input
+              type="email"
+              placeholder="Email address"
+              className="input-field"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className="input-group">
+            <input
+              type="password"
+              placeholder="Password"
+              className="input-field"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <button type="submit" className="btn-primary" disabled={loading}>
+            {loading ? "Signing in..." : "Sign In"}
+          </button>
+        </form>
 
-        <input
-          type="password"
-          placeholder="Password"
-          className="w-full p-2 border mb-3"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+        <div className="redirect-container">
+          Don't have an account?
+          <button onClick={() => navigate("/signup")} className="redirect-link">
+            Sign up
+          </button>
+        </div>
 
-        <button
-          onClick={login}
-          className="bg-green-600 text-white w-full py-2 rounded"
-        >
-          Login
-        </button>
-
-        {msg && <p className="text-red-500 mt-2">{msg}</p>}
+        {msg && (
+          <div className={isError ? "error-msg" : "success-msg"}>{msg}</div>
+        )}
       </div>
     </div>
   );

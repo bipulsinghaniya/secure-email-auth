@@ -1,0 +1,10 @@
+{
+  "name": "secure-email-auth",
+  "version": "1.0.0",
+  "description": "Email Auth with OTP verification - Single port app",
+  "scripts": {
+    "build": "cd frontend && npm run build",
+    "start": "cd backend && node server.js",
+    "dev": "cd frontend && npm run build && cd ../backend && node server.js"
+  }
+}

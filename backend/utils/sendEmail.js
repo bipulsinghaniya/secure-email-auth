@@ -1,24 +1,26 @@
 const nodemailer = require("nodemailer");
 
-const sendEmail = async (to, link) => {
+const sendEmail = async (to, otp) => {
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
       user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS
-    }
+      pass: process.env.EMAIL_PASS,
+    },
   });
 
   await transporter.sendMail({
-    from: `"Auth App" <${process.env.EMAIL_USER}>`,
+    from: `"Secure Auth" <${process.env.EMAIL_USER}>`,
     to,
-    subject: "Verify your email",
+    subject: "Your OTP Code",
     html: `
-      <h3>Email Verification</h3>
-      <p>Click the link below:</p>
-      <a href="${link}">Verify Email</a>
-      <p>This link expires in 10 minutes.</p>
-    `
+      <div style="font-family:sans-serif; max-width:400px; margin:auto; padding:20px;">
+        <h2 style="color:#6366f1;">Email Verification</h2>
+        <p>Your one-time password is:</p>
+        <h1 style="letter-spacing:8px; color:#a855f7; text-align:center;">${otp}</h1>
+        <p style="color:#888;">This code expires in <strong>10 minutes</strong>.</p>
+      </div>
+    `,
   });
 };
 
